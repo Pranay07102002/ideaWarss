@@ -59,11 +59,20 @@ function LoginForm() {
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="mx-auto mt-10 max-w-sm"
     >
-      <div className="glass rounded-2xl p-6 shadow-2xl shadow-black/40">
-        <h1 className="text-xl font-semibold">
+      <div className="card-light p-7">
+        <div className="mb-4 flex items-center gap-2.5">
+          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-700 text-lg text-white shadow-glow">
+            ⚡
+          </span>
+          <span className="text-lg font-extrabold tracking-tight text-ink">
+            ideawatts<span className="text-brand-500">.</span>
+          </span>
+        </div>
+
+        <h1 className="text-2xl font-extrabold tracking-tight text-ink">
           {mode === "signin" ? "Welcome back" : "Create your account"}
         </h1>
-        <p className="mt-1 text-sm text-neutral-400">
+        <p className="mt-1 text-sm text-ink/55">
           {mode === "signin"
             ? "Sign in with your email to post and vote."
             : "Sign up with your email — that's all you need."}
@@ -76,7 +85,7 @@ function LoginForm() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-white/10 bg-neutral-900/60 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-amber-400/60"
+            className="w-full rounded-2xl border border-ink/10 bg-white/70 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-brand-400"
           />
           <input
             type="password"
@@ -85,17 +94,19 @@ function LoginForm() {
             placeholder="Password (min 6 chars)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-white/10 bg-neutral-900/60 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-amber-400/60"
+            className="w-full rounded-2xl border border-ink/10 bg-white/70 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-brand-400"
           />
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
-          {message && <p className="text-sm text-amber-300">{message}</p>}
+          {error && <p className="text-sm font-medium text-red-500">{error}</p>}
+          {message && (
+            <p className="text-sm font-medium text-brand-600">{message}</p>
+          )}
 
           <motion.button
             whileTap={{ scale: 0.97 }}
             disabled={loading}
             type="submit"
-            className="w-full rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-amber-400 disabled:opacity-60"
+            className="w-full rounded-full bg-brand-500 px-4 py-3 text-sm font-semibold text-white shadow-glow transition-colors hover:bg-brand-600 disabled:opacity-60"
           >
             {loading
               ? "Please wait…"
@@ -111,7 +122,7 @@ function LoginForm() {
             setError(null);
             setMessage(null);
           }}
-          className="mt-4 w-full text-center text-sm text-neutral-400 transition-colors hover:text-neutral-200"
+          className="mt-4 w-full text-center text-sm font-medium text-ink/50 transition-colors hover:text-ink"
         >
           {mode === "signin"
             ? "New here? Create an account"

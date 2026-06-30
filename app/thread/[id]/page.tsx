@@ -52,7 +52,7 @@ export default async function ThreadPage({
     <div>
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm text-neutral-400 transition-colors hover:text-neutral-200"
+        className="inline-flex items-center gap-1 rounded-full bg-white/5 px-3 py-1.5 text-sm font-medium text-lavender/70 transition-colors hover:bg-white/10 hover:text-white"
       >
         ← All threads
       </Link>

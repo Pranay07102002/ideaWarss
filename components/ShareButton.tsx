@@ -27,11 +27,12 @@ export function ShareButton() {
 
   return (
     <motion.button
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.92 }}
+      whileHover={{ scale: 1.04 }}
       onClick={share}
-      className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-neutral-200 transition-colors hover:border-amber-400/50 hover:text-amber-300"
+      className="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink transition-colors"
     >
-      {copied ? "Copied ✓" : "Share"}
+      {copied ? "Copied ✓" : "Share ↗"}
     </motion.button>
   );
 }

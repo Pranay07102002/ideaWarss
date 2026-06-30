@@ -1,56 +1,77 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { Tile } from "@/components/Tile";
 import type { Thread } from "@/lib/types";
+
+// A few accent treatments so the grid feels lively, like the reference bento.
+const TONES = [
+  { card: "card-light", arrow: "text-brand-500", meta: "text-ink/50" },
+  { card: "card-brand", arrow: "text-white", meta: "text-white/60" },
+];
 
 export function ThreadsList({ initialThreads }: { initialThreads: Thread[] }) {
   if (initialThreads.length === 0) {
     return (
-      <div className="glass rounded-2xl px-5 py-10 text-center text-sm text-neutral-400">
-        No threads yet. Be the first to start one ⚡
-      </div>
+      <Tile className="card-light px-6 py-12 text-center" hover={false}>
+        <p className="text-2xl">🪄</p>
+        <p className="mt-2 text-sm font-medium text-ink/70">
+          No threads yet — start the first one and light it up.
+        </p>
+      </Tile>
     );
   }
 
   return (
-    <div className="grid gap-3">
-      {initialThreads.map((thread, i) => (
-        <motion.div
-          key={thread.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.04, duration: 0.3, ease: "easeOut" }}
-        >
-          <Link
-            href={`/thread/${thread.id}`}
-            className="glass group block rounded-2xl p-5 transition-all hover:border-amber-400/30 hover:bg-white/[0.07]"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h3 className="truncate text-base font-semibold transition-colors group-hover:text-amber-300">
-                  {thread.title}
-                </h3>
-                {thread.description && (
-                  <p className="mt-1 line-clamp-2 text-sm text-neutral-400">
-                    {thread.description}
-                  </p>
-                )}
+    <div className="grid gap-4 sm:grid-cols-2">
+      {initialThreads.map((thread, i) => {
+        const tone = TONES[i % TONES.length];
+        const isBrand = tone.card === "card-brand";
+        return (
+          <Tile key={thread.id} delay={i * 0.05}>
+            <Link
+              href={`/thread/${thread.id}`}
+              className={`${tone.card} group block h-full p-6`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <span
+                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-lg ${
+                    isBrand ? "bg-white/15" : "bg-brand-100"
+                  }`}
+                >
+                  💬
+                </span>
+                <span
+                  className={`text-xl transition-transform group-hover:translate-x-1 ${tone.arrow}`}
+                >
+                  →
+                </span>
               </div>
-              <span className="shrink-0 text-neutral-600 transition-transform group-hover:translate-x-0.5 group-hover:text-amber-400">
-                →
-              </span>
-            </div>
-            <p className="mt-3 text-xs text-neutral-500">
-              {new Date(thread.created_at).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </p>
-          </Link>
-        </motion.div>
-      ))}
+
+              <h3 className="mt-4 text-lg font-bold leading-snug">
+                {thread.title}
+              </h3>
+              {thread.description && (
+                <p
+                  className={`mt-1 line-clamp-2 text-sm ${
+                    isBrand ? "text-white/75" : "text-ink/60"
+                  }`}
+                >
+                  {thread.description}
+                </p>
+              )}
+
+              <p className={`mt-4 text-xs font-medium ${tone.meta}`}>
+                Opened{" "}
+                {new Date(thread.created_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </p>
+            </Link>
+          </Tile>
+        );
+      })}
     </div>
   );
 }

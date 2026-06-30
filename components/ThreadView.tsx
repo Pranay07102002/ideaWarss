@@ -161,52 +161,71 @@ export function ThreadView({
     return list;
   }, [ideas, view]);
 
+  const totalVotes = ideas.reduce((s, i) => s + i.votes, 0);
+
   return (
     <div className="mt-4 space-y-6">
-      <header className="glass rounded-2xl p-5">
-        <div className="flex items-start justify-between gap-4">
+      {/* Thread header — brand bento */}
+      <motion.header
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="card-brand relative overflow-hidden p-7"
+      >
+        <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
+        <div className="relative z-10 flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h1 className="text-2xl font-bold tracking-tight">{thread.title}</h1>
+            <span className="pill bg-white/15 text-white">💬 thread</span>
+            <h1 className="mt-3 text-3xl font-extrabold tracking-tight">
+              {thread.title}
+            </h1>
             {thread.description && (
-              <p className="mt-1 text-neutral-400">{thread.description}</p>
+              <p className="mt-2 max-w-xl text-white/80">{thread.description}</p>
             )}
-            <p className="mt-2 text-xs text-neutral-500">
-              {ideas.length} idea{ideas.length === 1 ? "" : "s"} ·{" "}
-              {ideas.reduce((s, i) => s + i.votes, 0)} votes
-            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="pill bg-white/15 text-white">
+                💡 {ideas.length} idea{ideas.length === 1 ? "" : "s"}
+              </span>
+              <span className="pill bg-white/15 text-white">
+                🔥 {totalVotes} vote{totalVotes === 1 ? "" : "s"}
+              </span>
+            </div>
           </div>
           <ShareButton />
         </div>
-      </header>
+      </motion.header>
 
       {/* Post an idea */}
       {currentUserId ? (
-        <form onSubmit={postIdea} className="glass rounded-2xl p-3">
+        <form onSubmit={postIdea} className="card-light p-4">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Share your idea…"
+            placeholder="Share your idea… the crowd decides what rises."
             rows={2}
-            className="w-full resize-none rounded-xl border border-white/10 bg-neutral-900/60 px-3.5 py-2.5 text-sm outline-none focus:border-amber-400/60"
+            className="w-full resize-none rounded-2xl border border-ink/10 bg-white/70 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-brand-400"
           />
-          <div className="mt-2 flex justify-end">
+          <div className="mt-2 flex items-center justify-between">
+            <span className="text-xs font-medium text-ink/40">
+              {content.length}/280
+            </span>
             <motion.button
-              whileTap={{ scale: 0.96 }}
-              disabled={posting || !content.trim()}
-              className="rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-amber-400 disabled:opacity-50"
+              whileTap={{ scale: 0.95 }}
+              disabled={posting || !content.trim() || content.length > 280}
+              className="rounded-full bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-glow transition-colors hover:bg-brand-600 disabled:opacity-50"
             >
-              {posting ? "Posting…" : "Post idea"}
+              {posting ? "Posting…" : "⚡ Post idea"}
             </motion.button>
           </div>
         </form>
       ) : (
-        <div className="glass flex items-center justify-between rounded-2xl px-5 py-4">
-          <p className="text-sm text-neutral-300">
+        <div className="card-light flex items-center justify-between gap-3 p-5">
+          <p className="text-sm font-medium text-ink/70">
             Sign in to post ideas and upvote.
           </p>
           <a
             href={`/login?next=/thread/${thread.id}`}
-            className="rounded-lg bg-amber-500 px-3.5 py-1.5 text-sm font-medium text-neutral-950 transition-colors hover:bg-amber-400"
+            className="shrink-0 rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-glow transition-colors hover:bg-brand-600"
           >
             Sign in
           </a>
@@ -214,23 +233,23 @@ export function ThreadView({
       )}
 
       {/* View toggle */}
-      <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 p-1 text-sm">
+      <div className="flex items-center gap-1 rounded-full bg-white/5 p-1 text-sm">
         {(["feed", "leaderboard"] as View[]).map((v) => (
           <button
             key={v}
             onClick={() => setView(v)}
-            className="relative flex-1 rounded-lg px-3 py-1.5 font-medium capitalize transition-colors"
+            className="relative flex-1 rounded-full px-3 py-2 font-semibold transition-colors"
           >
             {view === v && (
               <motion.span
                 layoutId="view-pill"
-                className="absolute inset-0 rounded-lg bg-amber-500"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="absolute inset-0 rounded-full bg-brand-500 shadow-glow"
+                transition={{ type: "spring", stiffness: 400, damping: 32 }}
               />
             )}
             <span
               className={`relative z-10 ${
-                view === v ? "text-neutral-950" : "text-neutral-300"
+                view === v ? "text-white" : "text-lavender/60"
               }`}
             >
               {v === "leaderboard" ? "🏆 Leaderboard" : "💬 Discussion"}
@@ -241,8 +260,11 @@ export function ThreadView({
 
       {/* Ideas */}
       {orderedIdeas.length === 0 ? (
-        <div className="glass rounded-2xl px-5 py-10 text-center text-sm text-neutral-400">
-          No ideas yet. Drop the first spark ⚡
+        <div className="card-light px-6 py-12 text-center">
+          <p className="text-2xl">⚡</p>
+          <p className="mt-2 text-sm font-medium text-ink/70">
+            No ideas yet. Drop the first spark.
+          </p>
         </div>
       ) : (
         <div className="grid gap-3">

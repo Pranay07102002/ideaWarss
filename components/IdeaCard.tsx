@@ -27,38 +27,40 @@ export function IdeaCard({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 12, scale: 0.98 }}
+      initial={{ opacity: 0, y: 14, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.96 }}
+      exit={{ opacity: 0, scale: 0.95 }}
       transition={{ type: "spring", stiffness: 350, damping: 30 }}
-      className={`glass flex items-start gap-3 rounded-2xl p-4 ${
-        isPodium ? "border-amber-400/30 bg-amber-400/[0.06]" : ""
+      whileHover={{ y: -3 }}
+      className={`card-light flex items-start gap-4 p-5 ${
+        isPodium ? "ring-2 ring-brand-400" : ""
       }`}
     >
       {/* Rank badge in leaderboard view */}
       {rank !== null && (
-        <div className="w-7 shrink-0 pt-0.5 text-center text-lg font-bold text-neutral-500">
-          {MEDALS[rank] ?? rank + 1}
+        <div className="w-8 shrink-0 pt-1 text-center text-2xl font-extrabold text-ink/40">
+          {MEDALS[rank] ?? <span className="text-lg">#{rank + 1}</span>}
         </div>
       )}
 
       {/* Upvote control */}
       <div className="relative flex shrink-0 flex-col items-center">
         <motion.button
-          whileTap={{ scale: 0.85 }}
+          whileTap={{ scale: 0.82 }}
           onClick={handleVote}
           aria-label="Upvote"
-          className={`grid h-10 w-10 place-items-center rounded-xl border transition-colors ${
+          className={`grid h-12 w-12 place-items-center rounded-2xl border-2 transition-colors ${
             idea.votedByMe
-              ? "border-amber-400 bg-amber-500 text-neutral-950"
-              : "border-white/10 bg-white/5 text-neutral-300 hover:border-amber-400/50 hover:text-amber-300"
+              ? "border-brand-500 bg-brand-500 text-white shadow-glow"
+              : "border-ink/10 bg-white/60 text-ink/50 hover:border-brand-400 hover:text-brand-500"
           }`}
         >
           <motion.span
             key={idea.votedByMe ? "on" : "off"}
-            initial={{ scale: 0.6 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 18 }}
+            initial={{ scale: 0.5, y: idea.votedByMe ? 4 : 0 }}
+            animate={{ scale: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 16 }}
+            className="text-base font-bold"
           >
             ▲
           </motion.span>
@@ -66,27 +68,30 @@ export function IdeaCard({
 
         <motion.span
           key={idea.votes}
-          initial={{ scale: 1.4, color: "#fbbf24" }}
-          animate={{ scale: 1, color: "#a3a3a3" }}
-          transition={{ duration: 0.3 }}
-          className="mt-1 text-sm font-semibold tabular-nums"
+          initial={{ scale: 1.5 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 500, damping: 18 }}
+          className={`mt-1.5 text-sm font-extrabold tabular-nums ${
+            idea.votedByMe ? "text-brand-600" : "text-ink/70"
+          }`}
         >
           {idea.votes}
         </motion.span>
 
         {/* Spark burst */}
         <AnimatePresence>
-          {sparks > 0 && (
-            <SparkBurst key={sparks} onDone={() => setSparks(0)} />
-          )}
+          {sparks > 0 && <SparkBurst key={sparks} onDone={() => setSparks(0)} />}
         </AnimatePresence>
       </div>
 
-      <p className="min-w-0 flex-1 whitespace-pre-wrap break-words pt-1 text-sm leading-relaxed text-neutral-100">
+      <p className="min-w-0 flex-1 whitespace-pre-wrap break-words pt-1 text-[15px] font-medium leading-relaxed text-ink">
         {idea.content}
         {idea.author_email && (
-          <span className="mt-2 block text-xs text-neutral-500">
-            — {idea.author_email.split("@")[0]}
+          <span className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-ink/45">
+            <span className="grid h-5 w-5 place-items-center rounded-full bg-brand-500 text-[10px] uppercase text-white">
+              {idea.author_email[0]}
+            </span>
+            {idea.author_email.split("@")[0]}
           </span>
         )}
       </p>
@@ -95,9 +100,9 @@ export function IdeaCard({
 }
 
 function SparkBurst({ onDone }: { onDone: () => void }) {
-  const particles = Array.from({ length: 6 });
+  const particles = Array.from({ length: 7 });
   return (
-    <div className="pointer-events-none absolute -top-1 left-1/2 -translate-x-1/2">
+    <div className="pointer-events-none absolute left-1/2 top-2 -translate-x-1/2">
       {particles.map((_, i) => {
         const angle = (i / particles.length) * Math.PI * 2;
         return (
@@ -106,13 +111,13 @@ function SparkBurst({ onDone }: { onDone: () => void }) {
             initial={{ opacity: 1, x: 0, y: 0, scale: 1 }}
             animate={{
               opacity: 0,
-              x: Math.cos(angle) * 22,
-              y: Math.sin(angle) * 22,
-              scale: 0.4,
+              x: Math.cos(angle) * 26,
+              y: Math.sin(angle) * 26,
+              scale: 0.3,
             }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
             onAnimationComplete={() => i === 0 && onDone()}
-            className="absolute h-1.5 w-1.5 rounded-full bg-amber-400"
+            className="absolute h-1.5 w-1.5 rounded-full bg-brand-500"
           />
         );
       })}

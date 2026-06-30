@@ -49,37 +49,40 @@ export function NewThreadForm() {
 
   if (!user) {
     return (
-      <div className="glass flex items-center justify-between rounded-2xl px-5 py-4">
-        <p className="text-sm text-neutral-300">
-          Sign in to start a thread and post ideas.
-        </p>
+      <div className="card-brand flex flex-col items-start justify-between gap-3 p-6 sm:flex-row sm:items-center">
+        <div>
+          <p className="text-lg font-bold">Got a topic worth debating?</p>
+          <p className="text-sm text-white/75">
+            Sign in to open a thread and start collecting ideas.
+          </p>
+        </div>
         <a
           href="/login"
-          className="rounded-lg bg-amber-500 px-3.5 py-1.5 text-sm font-medium text-neutral-950 transition-colors hover:bg-amber-400"
+          className="shrink-0 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-105"
         >
-          Sign in
+          Sign in to start
         </a>
       </div>
     );
   }
 
   return (
-    <div className="glass rounded-2xl p-1.5">
+    <div className="card-light overflow-hidden p-2">
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-neutral-400 transition-colors hover:bg-white/5"
+          className="flex w-full items-center gap-3 rounded-[1.4rem] px-4 py-4 text-left text-ink/60 transition-colors hover:bg-ink/5"
         >
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-amber-500/15 text-amber-300">
+          <span className="grid h-9 w-9 place-items-center rounded-2xl bg-brand-500 text-lg text-white shadow-glow">
             +
           </span>
-          Start a new discussion thread…
+          <span className="font-medium">Start a new discussion thread…</span>
         </button>
       ) : (
         <AnimatePresence>
           <motion.form
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             onSubmit={createThread}
             className="space-y-3 p-3"
           >
@@ -88,27 +91,27 @@ export function NewThreadForm() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Thread title — e.g. “Features for v2”"
-              className="w-full rounded-xl border border-white/10 bg-neutral-900/60 px-3.5 py-2.5 text-sm outline-none focus:border-amber-400/60"
+              className="w-full rounded-2xl border border-ink/10 bg-white/70 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-brand-400"
             />
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional description"
+              placeholder="Optional description — what should people brainstorm?"
               rows={2}
-              className="w-full resize-none rounded-xl border border-white/10 bg-neutral-900/60 px-3.5 py-2.5 text-sm outline-none focus:border-amber-400/60"
+              className="w-full resize-none rounded-2xl border border-ink/10 bg-white/70 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-brand-400"
             />
             <div className="flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-1.5 text-sm text-neutral-400 hover:text-neutral-200"
+                className="rounded-full px-4 py-2 text-sm font-medium text-ink/50 hover:text-ink"
               >
                 Cancel
               </button>
               <motion.button
-                whileTap={{ scale: 0.96 }}
+                whileTap={{ scale: 0.95 }}
                 disabled={loading || !title.trim()}
-                className="rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-amber-400 disabled:opacity-50"
+                className="rounded-full bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-glow transition-colors hover:bg-brand-600 disabled:opacity-50"
               >
                 {loading ? "Creating…" : "Create thread"}
               </motion.button>
